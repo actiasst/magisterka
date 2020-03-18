@@ -38,6 +38,20 @@ public:
 	void spawnPolygon();
 	void readFromFile(FString fileName);
 	void spawn();
+	void importFromFile();
+	void addVertex(double, double, double);
+	void clearVerticesArray();
+	void addTriangle(int, int, int);
+	void clearTrianglesArray();
+	void addTexture(double);
+	void clearTextureArray();
+	void addBlock(int, int, int, int, int, int, int, int);
+
+	void readFromCOORDFile();
+	void readFromELEMENTSFile();
+	void readFromUFile();
+	void setTexture(FString);
+	double setTextureCoordinates(double, double, double);
 
 	TArray<FVector> vertices;
 	TArray<FVector2D> UV0;
