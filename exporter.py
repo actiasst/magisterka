@@ -114,14 +114,23 @@ for fieldOutput in range(len(fieldOutputsKeys)):
 		error
 
 	print "STARTING EXPORTING "+fieldOutputsKeys[fieldOutput]
-	for componentLabel in range(len(odb.steps[step].frames[frame].fieldOutputs[fieldOutputsKeys[fieldOutput]].componentLabels)):
-		print "EXPORTING "+odb.steps[step].frames[frame].fieldOutputs[fieldOutputsKeys[fieldOutput]].componentLabels[componentLabel]
-		myFile = open(fileName+fieldOutputsKeys[fieldOutput]+'\\'+odb.steps[step].frames[frame].fieldOutputs[fieldOutputsKeys[fieldOutput]].componentLabels[componentLabel]+'.txt','w')
+	if len(odb.steps["Step-1"].frames[100].fieldOutputs[fieldOutputsKeys[fieldOutput]].componentLabels) > 0:
+		for componentLabel in range(len(odb.steps[step].frames[frame].fieldOutputs[fieldOutputsKeys[fieldOutput]].componentLabels)):
+			print "EXPORTING "+odb.steps[step].frames[frame].fieldOutputs[fieldOutputsKeys[fieldOutput]].componentLabels[componentLabel]
+			myFile = open(fileName+fieldOutputsKeys[fieldOutput]+'\\'+odb.steps[step].frames[frame].fieldOutputs[fieldOutputsKeys[fieldOutput]].componentLabels[componentLabel]+'.txt','w')
+			tmpExportValue = odb.steps[step].frames[frame].fieldOutputs[fieldOutputsKeys[fieldOutput]].values
+			for value in range(arrayLength):
+				myFile.write(str(tmpExportValue[value].data[componentLabel]) + '\n')
+			print odb.steps[step].frames[frame].fieldOutputs[fieldOutputsKeys[fieldOutput]].componentLabels[componentLabel]+" EXPORTED"
+		myFile.close()
+	else:
+		print "EXPORTING "+str([fieldOutputsKeys[fieldOutput]])
+		myFile = open(fileName+fieldOutputsKeys[fieldOutput]+'\\value.txt','w')
 		tmpExportValue = odb.steps[step].frames[frame].fieldOutputs[fieldOutputsKeys[fieldOutput]].values
 		for value in range(arrayLength):
-			myFile.write(str(tmpExportValue[value].data[componentLabel]) + '\n')
-		print odb.steps[step].frames[frame].fieldOutputs[fieldOutputsKeys[fieldOutput]].componentLabels[componentLabel]+" EXPORTED"
-	myFile.close()
+			myFile.write(str(tmpExportValue[value].data) + '\n')
+		print str([fieldOutputsKeys[fieldOutput]])+" EXPORTED"
+		myFile.close()
 #INV3
 	if str(odb.steps[step].frames[frame].fieldOutputs[fieldOutputsKeys[fieldOutput]].values[0].inv3) != "None":
 		print "EXPORTING INV3"
