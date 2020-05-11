@@ -5,25 +5,6 @@
 def addVertex(x,y,z):
 	myFile.write(str(x)+ ' ' + str(y) + ' ' + str(z) + '\n')
 
-def addTexture(u1):
-	myFile.write(str(u1) + '\n')
-	
-def exportELEMENTS(node):
-	myFile.write(str(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[0][node].connectivity[0] - 1) + ' ' +
-	str(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[0][node].connectivity[1] - 1) + ' ' +
-	str(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[0][node].connectivity[2] - 1) + ' ' +
-	str(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[0][node].connectivity[3] - 1) + ' ' +
-	str(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[0][node].connectivity[4] - 1) + ' ' +
-	str(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[0][node].connectivity[5] - 1) + ' ' +
-	str(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[0][node].connectivity[6] - 1) + ' ' +
-	str(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[0][node].connectivity[7] - 1) + '\n')
-
-def exportELEMENTS2(node):
-	myFile.write(str(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[0][node].connectivity[0] - 1) + ' ' +
-	str(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[0][node].connectivity[1] - 1) + ' ' +
-	str(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[0][node].connectivity[2] - 1) + ' ' +
-	str(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[0][node].connectivity[3] - 1) + '\n')
-
 ##############################################################
 #######actual exporter
 #######model exporter
