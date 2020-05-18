@@ -10,6 +10,7 @@
 #include "Containers/UnrealString.h"
 #include "Misc/Char.h"
 #include "Misc/CString.h"
+#include "Materials/Material.h"
 #include "SpawnPolygonActor.generated.h"
 
 UCLASS()
@@ -31,10 +32,12 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-
-	//UFUNCTION(BlueprintCallable)
-	UPROPERTY(visibleAnywhere)
+	UPROPERTY(VisibleAnywhere)
 	UProceduralMeshComponent* mesh;
+
+	UPROPERTY(EditAnywhere)
+	UMaterial* material;
+
 	void spawnPolygon();
 	void readFromFile(FString fileName);
 	void spawn();
@@ -46,14 +49,40 @@ public:
 	void addTexture(double);
 	void clearTextureArray();
 	void addBlock(int, int, int, int, int, int, int, int);
+	void addTetrahedron(int, int, int, int);
 
-	void readFromCOORDFile();
+	void readFromCOORDFile(float scale);
 	void readFromELEMENTSFile();
-	void readFromUFile();
+	void readFromUFile(float scale);
 	void setTexture(FString);
 	double setTextureCoordinates(double, double, double);
+
+	UFUNCTION(BlueprintCallable)
+	void pickFolderButton(FString tmp);
+
+	UFUNCTION(BlueprintCallable)
+	void pickValueButton(FString name1, FString name2);
+
+	UFUNCTION(BlueprintCallable)
+	void readModelButton(float scale);
+
+	UFUNCTION(BlueprintCallable)
+	void rendButton();
+
+	UFUNCTION(BlueprintCallable)
+	void clearButton();
+
+	UFUNCTION(BlueprintCallable)
+	void coordinatesOfModel(float& x1, float& x2, float& y1, float& y2, float& z1, float& z2);
+
+	UFUNCTION(BlueprintCallable)
+	void minMaxValues(float& min, float& max);
 
 	TArray<FVector> vertices;
 	TArray<FVector2D> UV0;
 	TArray<int32> triangles;
+	FString path;
+	float globalMin;
+	float globalMax;
+	bool threeDimension;
 };

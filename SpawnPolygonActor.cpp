@@ -1,5 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
+//FLinearColor color(1, 1, 1);
+//UKismetSystemLibrary::PrintString(GetWorld(),(FString)("xD"), true, false, color, 2);
 
 #include "SpawnPolygonActor.h"
 
@@ -18,27 +19,16 @@ ASpawnPolygonActor::ASpawnPolygonActor()
 void ASpawnPolygonActor::BeginPlay()
 {
 	Super::BeginPlay();
-	/*FLinearColor color(0, 0, 0);
-	UKismetSystemLibrary::PrintString(GetWorld(),(FString)("xD"), true, false, color, 2);*/
-	//spawnPolygon();
 }
 
 void ASpawnPolygonActor::PostLoad()
 {
 	Super::PostLoad();
-	/*FString fileName = "D:\\object.txt";
-	readFromFile(fileName);
-	spawn();*/
-	importFromFile();
 }
 
 void ASpawnPolygonActor::PostActorCreated()
 {
 	Super::PostActorCreated();
-	/*FString fileName = "D:\\object.txt";
-	readFromFile(fileName);
-	spawn();*/
-	importFromFile();
 }
 
 // Called every frame
@@ -123,10 +113,10 @@ void ASpawnPolygonActor::spawn()
 }
 
 void ASpawnPolygonActor::importFromFile() {
-	readFromCOORDFile();
-	readFromUFile();
+	readFromCOORDFile(100);
+	readFromUFile(100);
 	readFromELEMENTSFile();
-	setTexture("D:\\exported\\S.txt");
+	setTexture(path+"\\S.txt");
 	spawn();
 }
 
@@ -184,48 +174,79 @@ void ASpawnPolygonActor::addBlock(int V1, int V2, int V3, int V4, int V5, int V6
 	addTriangle(V3, V6, V7);
 }
 
-void ASpawnPolygonActor::readFromCOORDFile()
+void ASpawnPolygonActor::addTetrahedron(int V1, int V2, int V3, int V4){
+	addTriangle(V1, V2, V3);
+	addTriangle(V2, V4, V3);
+	addTriangle(V1, V4, V2);
+	addTriangle(V1, V3, V4);
+}
+
+void ASpawnPolygonActor::readFromCOORDFile(float scale)
 {
-	FString fileName = "D:\\exported\\COORD.txt";
+	scale /= 100.f;
+	if (vertices.Num() > 0)
+		clearVerticesArray();
+	FString fileName = path + "\\model\\COORD.txt";
 	TArray<FString> stringsArray;
 	TArray<FString, FDefaultAllocator> tmp;
 	FString deliminer = " ";
 	FFileHelper::LoadANSITextFileToStrings(*fileName, NULL, stringsArray);
 	FString::CullArray(&stringsArray);
-	for (int i = 0; i < stringsArray.Num(); i++) {
-		stringsArray[i].ParseIntoArrayWS(tmp, *deliminer, true);
-		addVertex(FCString::Atof(*tmp[0])*100., FCString::Atof(*tmp[1])*100., FCString::Atof(*tmp[2])*100.);
+	stringsArray[0].ParseIntoArrayWS(tmp, *deliminer, true);
+	if (tmp.Num() == 3) {
+		threeDimension = true;
+		for (int i = 0; i < stringsArray.Num(); i++) {
+			stringsArray[i].ParseIntoArrayWS(tmp, *deliminer, true);
+			addVertex(FCString::Atof(*tmp[0]) * 100. * scale, FCString::Atof(*tmp[1]) * 100. * scale, FCString::Atof(*tmp[2]) * 100. * scale);
+		}
 	}
+	else
+		for (int i = 0; i < stringsArray.Num(); i++) {
+			stringsArray[i].ParseIntoArrayWS(tmp, *deliminer, true);
+			addVertex(FCString::Atof(*tmp[0]) * 100. * scale, FCString::Atof(*tmp[1]) * 100. * scale, 0.0f);
+		}
 }
 
 void ASpawnPolygonActor::readFromELEMENTSFile()
 {
-
-	FString fileName = "D:\\exported\\ELEMENTS.txt";
+	FString fileName = path + "\\model\\ELEMENTS.txt";
 	TArray<FString> stringsArray;
 	TArray<FString, FDefaultAllocator> tmp;
 	FString deliminer = " ";
 	FFileHelper::LoadANSITextFileToStrings(*fileName, NULL, stringsArray);
 	FString::CullArray(&stringsArray);
-	for (int i = 0; i < stringsArray.Num(); i++) {
-		stringsArray[i].ParseIntoArrayWS(tmp, *deliminer, true);
-		addBlock(FCString::Atoi(*tmp[0]),
-			FCString::Atoi(*tmp[1]),
-			FCString::Atoi(*tmp[2]),
-			FCString::Atoi(*tmp[3]),
-			FCString::Atoi(*tmp[4]),
-			FCString::Atoi(*tmp[5]),
-			FCString::Atoi(*tmp[6]),
-			FCString::Atoi(*tmp[7]));
-	}
+	stringsArray[0].ParseIntoArrayWS(tmp, *deliminer, true);
+	if(tmp.Num() == 8)
+		for (int i = 0; i < stringsArray.Num(); i++) {
+			stringsArray[i].ParseIntoArrayWS(tmp, *deliminer, true);
+			addBlock(FCString::Atoi(*tmp[0]),
+				FCString::Atoi(*tmp[1]),
+				FCString::Atoi(*tmp[2]),
+				FCString::Atoi(*tmp[3]),
+				FCString::Atoi(*tmp[4]),
+				FCString::Atoi(*tmp[5]),
+				FCString::Atoi(*tmp[6]),
+				FCString::Atoi(*tmp[7]));
+		}
+	else if(tmp.Num() == 4)
+		for (int i = 0; i < stringsArray.Num(); i++) {
+			stringsArray[i].ParseIntoArrayWS(tmp, *deliminer, true);
+			addTetrahedron(FCString::Atoi(*tmp[0]),
+				FCString::Atoi(*tmp[1]),
+				FCString::Atoi(*tmp[2]),
+				FCString::Atoi(*tmp[3]));
+		}
 }
 
-void ASpawnPolygonActor::readFromUFile()
+void ASpawnPolygonActor::readFromUFile(float scale)
 {
-	FString fileName1 = "D:\\exported\\U1.txt";
-	FString fileName2 = "D:\\exported\\U2.txt";
-	FString fileName3 = "D:\\exported\\U3.txt";
-	FString fileName4 = "D:\\exported\\scale_factor.txt";
+	scale /= 100.f;
+	FString fileName1 = path + "\\model\\U1.txt";
+	FString fileName2 = path + "\\model\\U2.txt";
+	FString fileName3;
+	if(threeDimension)
+		fileName3 = path + "\\model\\U3.txt";
+	FString fileName4 = path + "\\model\\scale_factor.txt";
 	TArray<FString> stringsArray1;
 	TArray<FString> stringsArray2;
 	TArray<FString> stringsArray3;
@@ -235,11 +256,13 @@ void ASpawnPolygonActor::readFromUFile()
 	FString deliminer = " ";
 	FFileHelper::LoadANSITextFileToStrings(*fileName1, NULL, stringsArray1);
 	FFileHelper::LoadANSITextFileToStrings(*fileName2, NULL, stringsArray2);
-	FFileHelper::LoadANSITextFileToStrings(*fileName3, NULL, stringsArray3);
+	if (threeDimension)
+		FFileHelper::LoadANSITextFileToStrings(*fileName3, NULL, stringsArray3);
 	FFileHelper::LoadANSITextFileToStrings(*fileName4, NULL, stringsArray4);
 	FString::CullArray(&stringsArray1);
 	FString::CullArray(&stringsArray2);
-	FString::CullArray(&stringsArray3);
+	if (threeDimension)
+		FString::CullArray(&stringsArray3);
 	FString::CullArray(&stringsArray4);
 	stringsArray4[0].ParseIntoArrayWS(tmp, *deliminer, true);
 	tmpValue = tmp[0];
@@ -247,20 +270,25 @@ void ASpawnPolygonActor::readFromUFile()
 	for (int i = 0; i < stringsArray1.Num(); i++) {
 		stringsArray1[i].ParseIntoArrayWS(tmp, *deliminer, true);
 		tmpValue = tmp[0];
-		vertices[i][0] += (FCString::Atof(*tmpValue) * scaleFactor * 100.);
+		vertices[i][0] += (FCString::Atof(*tmpValue) * scaleFactor * 100. * scale);
 		stringsArray2[i].ParseIntoArrayWS(tmp, *deliminer, true);
 		tmpValue = tmp[0];
-		vertices[i][1] += (FCString::Atof(*tmpValue) * scaleFactor * 100.);
-		stringsArray3[i].ParseIntoArrayWS(tmp, *deliminer, true);
-		tmpValue = tmp[0];
-		vertices[i][2] += (FCString::Atof(*tmpValue) * scaleFactor * 100.);
+		vertices[i][1] += (FCString::Atof(*tmpValue) * scaleFactor * 100. * scale);
+		if (threeDimension) {
+			stringsArray3[i].ParseIntoArrayWS(tmp, *deliminer, true);
+			tmpValue = tmp[0];
+			vertices[i][2] += (FCString::Atof(*tmpValue) * scaleFactor * 100. * scale);
+		}
 	}
 }
 
 void ASpawnPolygonActor::setTexture(FString fileName)
 {
 	float min, max;
+	double tmpUV0;
 	TArray<int> counterArray;
+	if (UV0.Num() > 0)
+		clearTextureArray();
 	for (int i = 0; i < vertices.Num(); i++) {
 		addTexture(0.);
 		counterArray.Add(0);
@@ -269,45 +297,89 @@ void ASpawnPolygonActor::setTexture(FString fileName)
 	TArray<FString> stringsArray2;
 	TArray<FString, FDefaultAllocator> tmp;
 	FString deliminer = " ";
-	FString elementsFileName = "D:\\exported\\ELEMENTS.txt";
+	FString elementsFileName = path + "\\model\\ELEMENTS.txt";
 	FFileHelper::LoadANSITextFileToStrings(*fileName, NULL, stringsArray1);
 	FFileHelper::LoadANSITextFileToStrings(*elementsFileName, NULL, stringsArray2);
 	FString::CullArray(&stringsArray1);
 	FString::CullArray(&stringsArray2);
 	min = FCString::Atof(*stringsArray1[0]);
 	max = FCString::Atof(*stringsArray1[0]);
-	for (int i = 0; i < stringsArray2.Num(); i++) {
-		stringsArray2[i].ParseIntoArrayWS(tmp, *deliminer, true);
-		if (FCString::Atof(*stringsArray1[i]) < min)
-			min = FCString::Atof(*stringsArray1[i]);
-		if (FCString::Atof(*stringsArray1[i]) > max)
-			max = FCString::Atof(*stringsArray1[i]);
-		counterArray[FCString::Atoi(*tmp[0])] += 1;
-		counterArray[FCString::Atoi(*tmp[1])] += 1;
-		counterArray[FCString::Atoi(*tmp[2])] += 1;
-		counterArray[FCString::Atoi(*tmp[3])] += 1;
-		counterArray[FCString::Atoi(*tmp[4])] += 1;
-		counterArray[FCString::Atoi(*tmp[5])] += 1;
-		counterArray[FCString::Atoi(*tmp[6])] += 1;
-		counterArray[FCString::Atoi(*tmp[7])] += 1;
-		UV0[FCString::Atoi(*tmp[0])][0] += FCString::Atof(*stringsArray1[i]);
-		UV0[FCString::Atoi(*tmp[1])][0] += FCString::Atof(*stringsArray1[i]);
-		UV0[FCString::Atoi(*tmp[2])][0] += FCString::Atof(*stringsArray1[i]);
-		UV0[FCString::Atoi(*tmp[3])][0] += FCString::Atof(*stringsArray1[i]);
-		UV0[FCString::Atoi(*tmp[4])][0] += FCString::Atof(*stringsArray1[i]);
-		UV0[FCString::Atoi(*tmp[5])][0] += FCString::Atof(*stringsArray1[i]);
-		UV0[FCString::Atoi(*tmp[6])][0] += FCString::Atof(*stringsArray1[i]);
-		UV0[FCString::Atoi(*tmp[7])][0] += FCString::Atof(*stringsArray1[i]);
+	if (stringsArray1.Num() == stringsArray2.Num()) {
+		stringsArray2[0].ParseIntoArrayWS(tmp, *deliminer, true);
+		if (tmp.Num() == 8) {
+			for (int i = 0; i < stringsArray2.Num(); i++) {
+				stringsArray2[i].ParseIntoArrayWS(tmp, *deliminer, true);
+				if (FCString::Atof(*stringsArray1[i]) < min)
+					min = FCString::Atof(*stringsArray1[i]);
+				if (FCString::Atof(*stringsArray1[i]) > max)
+					max = FCString::Atof(*stringsArray1[i]);
+				counterArray[FCString::Atoi(*tmp[0])] += 1;
+				counterArray[FCString::Atoi(*tmp[1])] += 1;
+				counterArray[FCString::Atoi(*tmp[2])] += 1;
+				counterArray[FCString::Atoi(*tmp[3])] += 1;
+				counterArray[FCString::Atoi(*tmp[4])] += 1;
+				counterArray[FCString::Atoi(*tmp[5])] += 1;
+				counterArray[FCString::Atoi(*tmp[6])] += 1;
+				counterArray[FCString::Atoi(*tmp[7])] += 1;
+				UV0[FCString::Atoi(*tmp[0])][0] += FCString::Atof(*stringsArray1[i]);
+				UV0[FCString::Atoi(*tmp[1])][0] += FCString::Atof(*stringsArray1[i]);
+				UV0[FCString::Atoi(*tmp[2])][0] += FCString::Atof(*stringsArray1[i]);
+				UV0[FCString::Atoi(*tmp[3])][0] += FCString::Atof(*stringsArray1[i]);
+				UV0[FCString::Atoi(*tmp[4])][0] += FCString::Atof(*stringsArray1[i]);
+				UV0[FCString::Atoi(*tmp[5])][0] += FCString::Atof(*stringsArray1[i]);
+				UV0[FCString::Atoi(*tmp[6])][0] += FCString::Atof(*stringsArray1[i]);
+				UV0[FCString::Atoi(*tmp[7])][0] += FCString::Atof(*stringsArray1[i]);
+			}
+		}
+		if (tmp.Num() == 4) {
+			for (int i = 0; i < stringsArray2.Num(); i++) {
+				stringsArray2[i].ParseIntoArrayWS(tmp, *deliminer, true);
+				if (FCString::Atof(*stringsArray1[i]) < min)
+					min = FCString::Atof(*stringsArray1[i]);
+				if (FCString::Atof(*stringsArray1[i]) > max)
+					max = FCString::Atof(*stringsArray1[i]);
+				counterArray[FCString::Atoi(*tmp[0])] += 1;
+				counterArray[FCString::Atoi(*tmp[1])] += 1;
+				counterArray[FCString::Atoi(*tmp[2])] += 1;
+				counterArray[FCString::Atoi(*tmp[3])] += 1;
+				UV0[FCString::Atoi(*tmp[0])][0] += FCString::Atof(*stringsArray1[i]);
+				UV0[FCString::Atoi(*tmp[1])][0] += FCString::Atof(*stringsArray1[i]);
+				UV0[FCString::Atoi(*tmp[2])][0] += FCString::Atof(*stringsArray1[i]);
+				UV0[FCString::Atoi(*tmp[3])][0] += FCString::Atof(*stringsArray1[i]);
+			}
+		}
+		for (int i = 0; i < UV0.Num(); i++) {
+			UV0[i][0] /= (float)counterArray[i];
+		}
+		for (int i = 0; i < UV0.Num(); i++) {
+			tmpUV0 = setTextureCoordinates(min, max, UV0[i][0]);
+			if (tmpUV0 <= 0)
+				tmpUV0 = 0.01;
+			if (tmpUV0 >= 1)
+				tmpUV0 = 0.99;
+			UV0[i][0] = tmpUV0;
+			UV0[i][1] = tmpUV0;
+		}
 	}
-	for (int i = 0; i < UV0.Num(); i++) {
-		UV0[i][0] /= (float)counterArray[i];
+	else {
+		for (int i = 1; i < stringsArray1.Num(); i++) {
+			if (FCString::Atof(*stringsArray1[i]) < min)
+				min = FCString::Atof(*stringsArray1[i]);
+			if (FCString::Atof(*stringsArray1[i]) > max)
+				max = FCString::Atof(*stringsArray1[i]);
+		}
+		for (int i = 0; i < stringsArray1.Num(); i++) {
+			tmpUV0 = setTextureCoordinates(min, max, FCString::Atof(*stringsArray1[i]));
+			if (tmpUV0 <= 0.02)
+				tmpUV0 = 0.03;
+			if (tmpUV0 >= 0.98)
+				tmpUV0 = 0.97;
+			UV0[i][0] = tmpUV0;
+			UV0[i][1] = tmpUV0;
+		}
 	}
-	double tmpUV0;
-	for (int i = 0; i < UV0.Num(); i++) {
-		tmpUV0 = setTextureCoordinates(min, max, UV0[i][0]);
-		UV0[i][0] = tmpUV0;
-		UV0[i][1] = tmpUV0;
-	}
+	globalMin = min;
+	globalMax = max;
 }
 
 double ASpawnPolygonActor::setTextureCoordinates(double min, double max, double value)
@@ -315,3 +387,66 @@ double ASpawnPolygonActor::setTextureCoordinates(double min, double max, double 
 	return (value - min) / (max - min);
 }
 
+void ASpawnPolygonActor::pickFolderButton(FString tmp)
+{
+	path = tmp;
+}
+
+void ASpawnPolygonActor::pickValueButton(FString name1, FString name2)
+{
+	setTexture(path + "\\" + name1 + "\\" + name2 + ".txt");
+}
+
+void ASpawnPolygonActor::readModelButton(float scale)
+{
+	readFromCOORDFile(scale);
+	readFromUFile(scale);
+	readFromELEMENTSFile();
+}
+
+void ASpawnPolygonActor::rendButton()
+{
+	spawn();
+	mesh->SetMaterial(0, material);
+}
+
+void ASpawnPolygonActor::clearButton()
+{
+	clearTextureArray();
+	clearVerticesArray();
+	clearTrianglesArray();
+	path = "";
+	spawn();
+}
+
+void ASpawnPolygonActor::coordinatesOfModel(float& x1, float& x2, float& y1, float& y2, float& z1, float& z2)
+{
+	x1 = vertices[0][0];
+	x2 = vertices[0][0];
+
+	y1 = vertices[0][1];
+	y2 = vertices[0][1];
+
+	z1 = vertices[0][2];
+	z2 = vertices[0][2];
+	for (int i = 0; i < vertices.Num(); i++) {
+		if (vertices[i][0] < x1)
+			x1 = vertices[i][0];
+		if (vertices[i][0] > x2)
+			x2 = vertices[i][0];
+		if (vertices[i][1] < y1)
+			y1 = vertices[i][1];
+		if (vertices[i][1] > y2)
+			y2 = vertices[i][1];
+		if (vertices[i][2] < z1)
+			z1 = vertices[i][2];
+		if (vertices[i][2] > z2)
+			z2 = vertices[i][2];
+	}
+}
+
+void ASpawnPolygonActor::minMaxValues(float& min, float& max)
+{
+	min = globalMin;
+	max = globalMax;
+}
