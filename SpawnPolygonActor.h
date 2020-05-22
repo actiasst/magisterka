@@ -50,6 +50,9 @@ public:
 	void clearTextureArray();
 	void addBlock(int, int, int, int, int, int, int, int);
 	void addTetrahedron(int, int, int, int);
+	void add2D3Node(int, int, int);
+	void add2D4Node(int, int, int, int);
+	void add2D6Node(int, int, int, int, int, int);
 
 	void readFromCOORDFile(float scale);
 	void readFromELEMENTSFile();

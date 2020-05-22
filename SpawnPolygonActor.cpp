@@ -181,6 +181,25 @@ void ASpawnPolygonActor::addTetrahedron(int V1, int V2, int V3, int V4){
 	addTriangle(V1, V3, V4);
 }
 
+void ASpawnPolygonActor::add2D3Node(int V1, int V2, int V3)
+{
+	addTriangle(V1, V3, V2);
+}
+
+void ASpawnPolygonActor::add2D4Node(int V1, int V2, int V3, int V4)
+{
+	addTriangle(V1, V3, V2);
+	addTriangle(V1, V4, V3);
+}
+
+void ASpawnPolygonActor::add2D6Node(int V1, int V2, int V3, int V4, int V5, int V6)
+{
+	addTriangle(V1, V6, V4);
+	addTriangle(V4, V6, V5);
+	addTriangle(V4, V5, V2);
+	addTriangle(V6, V3, V5);
+}
+
 void ASpawnPolygonActor::readFromCOORDFile(float scale)
 {
 	scale /= 100.f;
@@ -200,11 +219,13 @@ void ASpawnPolygonActor::readFromCOORDFile(float scale)
 			addVertex(FCString::Atof(*tmp[0]) * 100. * scale, FCString::Atof(*tmp[1]) * 100. * scale, FCString::Atof(*tmp[2]) * 100. * scale);
 		}
 	}
-	else
+	else {
+		threeDimension = false;
 		for (int i = 0; i < stringsArray.Num(); i++) {
 			stringsArray[i].ParseIntoArrayWS(tmp, *deliminer, true);
 			addVertex(FCString::Atof(*tmp[0]) * 100. * scale, FCString::Atof(*tmp[1]) * 100. * scale, 0.0f);
 		}
+	}
 }
 
 void ASpawnPolygonActor::readFromELEMENTSFile()
@@ -216,25 +237,52 @@ void ASpawnPolygonActor::readFromELEMENTSFile()
 	FFileHelper::LoadANSITextFileToStrings(*fileName, NULL, stringsArray);
 	FString::CullArray(&stringsArray);
 	stringsArray[0].ParseIntoArrayWS(tmp, *deliminer, true);
-	if(tmp.Num() == 8)
+	if(threeDimension)
 		for (int i = 0; i < stringsArray.Num(); i++) {
 			stringsArray[i].ParseIntoArrayWS(tmp, *deliminer, true);
-			addBlock(FCString::Atoi(*tmp[0]),
-				FCString::Atoi(*tmp[1]),
-				FCString::Atoi(*tmp[2]),
-				FCString::Atoi(*tmp[3]),
-				FCString::Atoi(*tmp[4]),
-				FCString::Atoi(*tmp[5]),
-				FCString::Atoi(*tmp[6]),
-				FCString::Atoi(*tmp[7]));
+			switch (tmp.Num()) {
+			case 4:
+				addTetrahedron(FCString::Atoi(*tmp[0]),
+					FCString::Atoi(*tmp[1]),
+					FCString::Atoi(*tmp[2]),
+					FCString::Atoi(*tmp[3]));
+				break;
+			case 8:
+				addBlock(FCString::Atoi(*tmp[0]),
+					FCString::Atoi(*tmp[1]),
+					FCString::Atoi(*tmp[2]),
+					FCString::Atoi(*tmp[3]),
+					FCString::Atoi(*tmp[4]),
+					FCString::Atoi(*tmp[5]),
+					FCString::Atoi(*tmp[6]),
+					FCString::Atoi(*tmp[7]));
+				break;
+			}
 		}
-	else if(tmp.Num() == 4)
+	else
 		for (int i = 0; i < stringsArray.Num(); i++) {
 			stringsArray[i].ParseIntoArrayWS(tmp, *deliminer, true);
-			addTetrahedron(FCString::Atoi(*tmp[0]),
-				FCString::Atoi(*tmp[1]),
-				FCString::Atoi(*tmp[2]),
-				FCString::Atoi(*tmp[3]));
+			switch (tmp.Num()) {
+			case 3:
+				add2D3Node(FCString::Atoi(*tmp[0]),
+					FCString::Atoi(*tmp[1]),
+					FCString::Atoi(*tmp[2]));
+				break;
+			case 4:
+				add2D4Node(FCString::Atoi(*tmp[0]),
+					FCString::Atoi(*tmp[1]),
+					FCString::Atoi(*tmp[2]),
+					FCString::Atoi(*tmp[3]));
+				break;
+			case 6:
+				add2D6Node(FCString::Atoi(*tmp[0]),
+					FCString::Atoi(*tmp[1]),
+					FCString::Atoi(*tmp[2]),
+					FCString::Atoi(*tmp[3]),
+					FCString::Atoi(*tmp[4]),
+					FCString::Atoi(*tmp[5]));
+				break;
+			}
 		}
 }
 
@@ -305,10 +353,54 @@ void ASpawnPolygonActor::setTexture(FString fileName)
 	min = FCString::Atof(*stringsArray1[0]);
 	max = FCString::Atof(*stringsArray1[0]);
 	if (stringsArray1.Num() == stringsArray2.Num()) {
-		stringsArray2[0].ParseIntoArrayWS(tmp, *deliminer, true);
-		if (tmp.Num() == 8) {
-			for (int i = 0; i < stringsArray2.Num(); i++) {
-				stringsArray2[i].ParseIntoArrayWS(tmp, *deliminer, true);
+		for (int i = 0; i < stringsArray2.Num(); i++) {
+			stringsArray2[i].ParseIntoArrayWS(tmp, *deliminer, true);
+			switch (tmp.Num()) {
+			case 3:
+				if (FCString::Atof(*stringsArray1[i]) < min)
+					min = FCString::Atof(*stringsArray1[i]);
+				if (FCString::Atof(*stringsArray1[i]) > max)
+					max = FCString::Atof(*stringsArray1[i]);
+				counterArray[FCString::Atoi(*tmp[0])] += 1;
+				counterArray[FCString::Atoi(*tmp[1])] += 1;
+				counterArray[FCString::Atoi(*tmp[2])] += 1;
+				UV0[FCString::Atoi(*tmp[0])][0] += FCString::Atof(*stringsArray1[i]);
+				UV0[FCString::Atoi(*tmp[1])][0] += FCString::Atof(*stringsArray1[i]);
+				UV0[FCString::Atoi(*tmp[2])][0] += FCString::Atof(*stringsArray1[i]);
+				break;
+			case 4:
+				if (FCString::Atof(*stringsArray1[i]) < min)
+					min = FCString::Atof(*stringsArray1[i]);
+				if (FCString::Atof(*stringsArray1[i]) > max)
+					max = FCString::Atof(*stringsArray1[i]);
+				counterArray[FCString::Atoi(*tmp[0])] += 1;
+				counterArray[FCString::Atoi(*tmp[1])] += 1;
+				counterArray[FCString::Atoi(*tmp[2])] += 1;
+				counterArray[FCString::Atoi(*tmp[3])] += 1;
+				UV0[FCString::Atoi(*tmp[0])][0] += FCString::Atof(*stringsArray1[i]);
+				UV0[FCString::Atoi(*tmp[1])][0] += FCString::Atof(*stringsArray1[i]);
+				UV0[FCString::Atoi(*tmp[2])][0] += FCString::Atof(*stringsArray1[i]);
+				UV0[FCString::Atoi(*tmp[3])][0] += FCString::Atof(*stringsArray1[i]);
+				break;
+			case 6:
+				if (FCString::Atof(*stringsArray1[i]) < min)
+					min = FCString::Atof(*stringsArray1[i]);
+				if (FCString::Atof(*stringsArray1[i]) > max)
+					max = FCString::Atof(*stringsArray1[i]);
+				counterArray[FCString::Atoi(*tmp[0])] += 1;
+				counterArray[FCString::Atoi(*tmp[1])] += 1;
+				counterArray[FCString::Atoi(*tmp[2])] += 1;
+				counterArray[FCString::Atoi(*tmp[3])] += 1;
+				counterArray[FCString::Atoi(*tmp[4])] += 1;
+				counterArray[FCString::Atoi(*tmp[5])] += 1;
+				UV0[FCString::Atoi(*tmp[0])][0] += FCString::Atof(*stringsArray1[i]);
+				UV0[FCString::Atoi(*tmp[1])][0] += FCString::Atof(*stringsArray1[i]);
+				UV0[FCString::Atoi(*tmp[2])][0] += FCString::Atof(*stringsArray1[i]);
+				UV0[FCString::Atoi(*tmp[3])][0] += FCString::Atof(*stringsArray1[i]);
+				UV0[FCString::Atoi(*tmp[4])][0] += FCString::Atof(*stringsArray1[i]);
+				UV0[FCString::Atoi(*tmp[5])][0] += FCString::Atof(*stringsArray1[i]);
+				break;
+			case 8:
 				if (FCString::Atof(*stringsArray1[i]) < min)
 					min = FCString::Atof(*stringsArray1[i]);
 				if (FCString::Atof(*stringsArray1[i]) > max)
@@ -329,23 +421,7 @@ void ASpawnPolygonActor::setTexture(FString fileName)
 				UV0[FCString::Atoi(*tmp[5])][0] += FCString::Atof(*stringsArray1[i]);
 				UV0[FCString::Atoi(*tmp[6])][0] += FCString::Atof(*stringsArray1[i]);
 				UV0[FCString::Atoi(*tmp[7])][0] += FCString::Atof(*stringsArray1[i]);
-			}
-		}
-		if (tmp.Num() == 4) {
-			for (int i = 0; i < stringsArray2.Num(); i++) {
-				stringsArray2[i].ParseIntoArrayWS(tmp, *deliminer, true);
-				if (FCString::Atof(*stringsArray1[i]) < min)
-					min = FCString::Atof(*stringsArray1[i]);
-				if (FCString::Atof(*stringsArray1[i]) > max)
-					max = FCString::Atof(*stringsArray1[i]);
-				counterArray[FCString::Atoi(*tmp[0])] += 1;
-				counterArray[FCString::Atoi(*tmp[1])] += 1;
-				counterArray[FCString::Atoi(*tmp[2])] += 1;
-				counterArray[FCString::Atoi(*tmp[3])] += 1;
-				UV0[FCString::Atoi(*tmp[0])][0] += FCString::Atof(*stringsArray1[i]);
-				UV0[FCString::Atoi(*tmp[1])][0] += FCString::Atof(*stringsArray1[i]);
-				UV0[FCString::Atoi(*tmp[2])][0] += FCString::Atof(*stringsArray1[i]);
-				UV0[FCString::Atoi(*tmp[3])][0] += FCString::Atof(*stringsArray1[i]);
+				break;
 			}
 		}
 		for (int i = 0; i < UV0.Num(); i++) {
