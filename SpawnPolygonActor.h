@@ -48,11 +48,14 @@ public:
 	void clearTrianglesArray();
 	void addTexture(double);
 	void clearTextureArray();
-	void addBlock(int, int, int, int, int, int, int, int);
-	void addTetrahedron(int, int, int, int);
+	void add3D4Node(int, int, int, int);
+	void add3D8Node(int, int, int, int, int, int, int, int);
+	void add3D10Node(int, int, int, int, int, int, int, int, int, int);
+	void add3D20Node(int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int);
 	void add2D3Node(int, int, int);
 	void add2D4Node(int, int, int, int);
 	void add2D6Node(int, int, int, int, int, int);
+	void add2D8Node(int, int, int, int, int, int, int, int);
 
 	void readFromCOORDFile(float scale);
 	void readFromELEMENTSFile();
