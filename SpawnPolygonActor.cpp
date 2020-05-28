@@ -212,6 +212,7 @@ void ASpawnPolygonActor::readFromCOORDFile(float scale)
 	FFileHelper::LoadANSITextFileToStrings(*fileName, NULL, stringsArray);
 	FString::CullArray(&stringsArray);
 	stringsArray[0].ParseIntoArrayWS(tmp, *deliminer, true);
+	nodesCounter = stringsArray.Num();
 	if (tmp.Num() == 3) {
 		threeDimension = true;
 		for (int i = 0; i < stringsArray.Num(); i++) {
@@ -352,87 +353,92 @@ void ASpawnPolygonActor::setTexture(FString fileName)
 	FString::CullArray(&stringsArray2);
 	min = FCString::Atof(*stringsArray1[0]);
 	max = FCString::Atof(*stringsArray1[0]);
-	if (stringsArray1.Num() == stringsArray2.Num()) {
-		for (int i = 0; i < stringsArray2.Num(); i++) {
-			stringsArray2[i].ParseIntoArrayWS(tmp, *deliminer, true);
-			switch (tmp.Num()) {
-			case 3:
-				if (FCString::Atof(*stringsArray1[i]) < min)
-					min = FCString::Atof(*stringsArray1[i]);
-				if (FCString::Atof(*stringsArray1[i]) > max)
-					max = FCString::Atof(*stringsArray1[i]);
-				counterArray[FCString::Atoi(*tmp[0])] += 1;
-				counterArray[FCString::Atoi(*tmp[1])] += 1;
-				counterArray[FCString::Atoi(*tmp[2])] += 1;
-				UV0[FCString::Atoi(*tmp[0])][0] += FCString::Atof(*stringsArray1[i]);
-				UV0[FCString::Atoi(*tmp[1])][0] += FCString::Atof(*stringsArray1[i]);
-				UV0[FCString::Atoi(*tmp[2])][0] += FCString::Atof(*stringsArray1[i]);
-				break;
-			case 4:
-				if (FCString::Atof(*stringsArray1[i]) < min)
-					min = FCString::Atof(*stringsArray1[i]);
-				if (FCString::Atof(*stringsArray1[i]) > max)
-					max = FCString::Atof(*stringsArray1[i]);
-				counterArray[FCString::Atoi(*tmp[0])] += 1;
-				counterArray[FCString::Atoi(*tmp[1])] += 1;
-				counterArray[FCString::Atoi(*tmp[2])] += 1;
-				counterArray[FCString::Atoi(*tmp[3])] += 1;
-				UV0[FCString::Atoi(*tmp[0])][0] += FCString::Atof(*stringsArray1[i]);
-				UV0[FCString::Atoi(*tmp[1])][0] += FCString::Atof(*stringsArray1[i]);
-				UV0[FCString::Atoi(*tmp[2])][0] += FCString::Atof(*stringsArray1[i]);
-				UV0[FCString::Atoi(*tmp[3])][0] += FCString::Atof(*stringsArray1[i]);
-				break;
-			case 6:
-				if (FCString::Atof(*stringsArray1[i]) < min)
-					min = FCString::Atof(*stringsArray1[i]);
-				if (FCString::Atof(*stringsArray1[i]) > max)
-					max = FCString::Atof(*stringsArray1[i]);
-				counterArray[FCString::Atoi(*tmp[0])] += 1;
-				counterArray[FCString::Atoi(*tmp[1])] += 1;
-				counterArray[FCString::Atoi(*tmp[2])] += 1;
-				counterArray[FCString::Atoi(*tmp[3])] += 1;
-				counterArray[FCString::Atoi(*tmp[4])] += 1;
-				counterArray[FCString::Atoi(*tmp[5])] += 1;
-				UV0[FCString::Atoi(*tmp[0])][0] += FCString::Atof(*stringsArray1[i]);
-				UV0[FCString::Atoi(*tmp[1])][0] += FCString::Atof(*stringsArray1[i]);
-				UV0[FCString::Atoi(*tmp[2])][0] += FCString::Atof(*stringsArray1[i]);
-				UV0[FCString::Atoi(*tmp[3])][0] += FCString::Atof(*stringsArray1[i]);
-				UV0[FCString::Atoi(*tmp[4])][0] += FCString::Atof(*stringsArray1[i]);
-				UV0[FCString::Atoi(*tmp[5])][0] += FCString::Atof(*stringsArray1[i]);
-				break;
-			case 8:
-				if (FCString::Atof(*stringsArray1[i]) < min)
-					min = FCString::Atof(*stringsArray1[i]);
-				if (FCString::Atof(*stringsArray1[i]) > max)
-					max = FCString::Atof(*stringsArray1[i]);
-				counterArray[FCString::Atoi(*tmp[0])] += 1;
-				counterArray[FCString::Atoi(*tmp[1])] += 1;
-				counterArray[FCString::Atoi(*tmp[2])] += 1;
-				counterArray[FCString::Atoi(*tmp[3])] += 1;
-				counterArray[FCString::Atoi(*tmp[4])] += 1;
-				counterArray[FCString::Atoi(*tmp[5])] += 1;
-				counterArray[FCString::Atoi(*tmp[6])] += 1;
-				counterArray[FCString::Atoi(*tmp[7])] += 1;
-				UV0[FCString::Atoi(*tmp[0])][0] += FCString::Atof(*stringsArray1[i]);
-				UV0[FCString::Atoi(*tmp[1])][0] += FCString::Atof(*stringsArray1[i]);
-				UV0[FCString::Atoi(*tmp[2])][0] += FCString::Atof(*stringsArray1[i]);
-				UV0[FCString::Atoi(*tmp[3])][0] += FCString::Atof(*stringsArray1[i]);
-				UV0[FCString::Atoi(*tmp[4])][0] += FCString::Atof(*stringsArray1[i]);
-				UV0[FCString::Atoi(*tmp[5])][0] += FCString::Atof(*stringsArray1[i]);
-				UV0[FCString::Atoi(*tmp[6])][0] += FCString::Atof(*stringsArray1[i]);
-				UV0[FCString::Atoi(*tmp[7])][0] += FCString::Atof(*stringsArray1[i]);
-				break;
+	double tmpNodeValue[20];
+	if (stringsArray1.Num() != nodesCounter) {
+		if(!threeDimension){
+			for (int i = 0; i < stringsArray2.Num(); i++) {
+				stringsArray2[i].ParseIntoArrayWS(tmp, *deliminer, true);
+				switch (tmp.Num()) {
+				case 3:
+					if (FCString::Atof(*stringsArray1[i]) < min)
+						min = FCString::Atof(*stringsArray1[i]);
+					if (FCString::Atof(*stringsArray1[i]) > max)
+						max = FCString::Atof(*stringsArray1[i]);
+					counterArray[FCString::Atoi(*tmp[0])] += 1;
+					counterArray[FCString::Atoi(*tmp[1])] += 1;
+					counterArray[FCString::Atoi(*tmp[2])] += 1;
+					UV0[FCString::Atoi(*tmp[0])][0] += FCString::Atof(*stringsArray1[i]);
+					UV0[FCString::Atoi(*tmp[1])][0] += FCString::Atof(*stringsArray1[i]);
+					UV0[FCString::Atoi(*tmp[2])][0] += FCString::Atof(*stringsArray1[i]);
+					break;
+				case 4:
+					if (FCString::Atof(*stringsArray1[i]) < min)
+						min = FCString::Atof(*stringsArray1[i]);
+					if (FCString::Atof(*stringsArray1[i]) > max)
+						max = FCString::Atof(*stringsArray1[i]);
+					counterArray[FCString::Atoi(*tmp[0])] += 1;
+					counterArray[FCString::Atoi(*tmp[1])] += 1;
+					counterArray[FCString::Atoi(*tmp[2])] += 1;
+					counterArray[FCString::Atoi(*tmp[3])] += 1;
+					UV0[FCString::Atoi(*tmp[0])][0] += FCString::Atof(*stringsArray1[i]);
+					UV0[FCString::Atoi(*tmp[1])][0] += FCString::Atof(*stringsArray1[i]);
+					UV0[FCString::Atoi(*tmp[2])][0] += FCString::Atof(*stringsArray1[i]);
+					UV0[FCString::Atoi(*tmp[3])][0] += FCString::Atof(*stringsArray1[i]);
+					break;
+				case 6:
+					tmpNodeValue[0] = 0;
+					tmpNodeValue[1] = 0;
+					tmpNodeValue[2] = 0;
+					tmpNodeValue[3] = 0;
+					tmpNodeValue[4] = 0;
+					tmpNodeValue[5] = 0;
+					counterArray[FCString::Atoi(*tmp[0])] += 1;
+					counterArray[FCString::Atoi(*tmp[1])] += 1;
+					counterArray[FCString::Atoi(*tmp[2])] += 1;
+					counterArray[FCString::Atoi(*tmp[3])] += 1;
+					counterArray[FCString::Atoi(*tmp[4])] += 1;
+					counterArray[FCString::Atoi(*tmp[5])] += 1;
+					for (int ii = i * 3; ii < ((i * 3) + 3); ii++) {
+						tmpNodeValue[0] += FCString::Atof(*stringsArray1[ii]);
+						tmpNodeValue[1] += FCString::Atof(*stringsArray1[ii]);
+						tmpNodeValue[2] += FCString::Atof(*stringsArray1[ii]);
+						tmpNodeValue[3] += FCString::Atof(*stringsArray1[ii]);
+						tmpNodeValue[4] += FCString::Atof(*stringsArray1[ii]);
+						tmpNodeValue[5] += FCString::Atof(*stringsArray1[ii]);
+					}
+					tmpNodeValue[0] /= 3.;
+					tmpNodeValue[1] /= 3.;
+					tmpNodeValue[2] /= 3.;
+					tmpNodeValue[3] /= 3.;
+					tmpNodeValue[4] /= 3.;
+					tmpNodeValue[5] /= 3.;
+					for (int ii = 0; ii < 6; ii++) {
+						if (tmpNodeValue[ii] < min)
+							min = tmpNodeValue[ii];
+						if (tmpNodeValue[ii] > max)
+							max = tmpNodeValue[ii];
+					}
+					UV0[FCString::Atoi(*tmp[0])][0] += tmpNodeValue[0];
+					UV0[FCString::Atoi(*tmp[1])][0] += tmpNodeValue[1];
+					UV0[FCString::Atoi(*tmp[2])][0] += tmpNodeValue[2];
+					UV0[FCString::Atoi(*tmp[3])][0] += tmpNodeValue[3];
+					UV0[FCString::Atoi(*tmp[4])][0] += tmpNodeValue[4];
+					UV0[FCString::Atoi(*tmp[5])][0] += tmpNodeValue[5];
+				}
 			}
+		}
+		else {
+
 		}
 		for (int i = 0; i < UV0.Num(); i++) {
 			UV0[i][0] /= (float)counterArray[i];
 		}
 		for (int i = 0; i < UV0.Num(); i++) {
 			tmpUV0 = setTextureCoordinates(min, max, UV0[i][0]);
-			if (tmpUV0 <= 0)
-				tmpUV0 = 0.01;
-			if (tmpUV0 >= 1)
-				tmpUV0 = 0.99;
+			if (tmpUV0 <= 0.02)
+				tmpUV0 = 0.03;
+			if (tmpUV0 >= 0.98)
+				tmpUV0 = 0.97;
 			UV0[i][0] = tmpUV0;
 			UV0[i][1] = tmpUV0;
 		}

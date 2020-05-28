@@ -88,4 +88,5 @@ public:
 	float globalMin;
 	float globalMax;
 	bool threeDimension;
+	int nodesCounter;
 };
