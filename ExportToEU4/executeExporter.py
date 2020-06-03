@@ -55,7 +55,7 @@ def exportModel(step, frame, setName, instanceName, instanceSetName, fileName, o
 	fileName += str(frame)
 	fileName += "\\"
 	
-	if setName == "":
+	if setName == "" and instanceName == "":
 		setName = " ALL ELEMENTS"
 
 	print "STARTING EXPORTING"
@@ -132,22 +132,39 @@ def exportModel(step, frame, setName, instanceName, instanceSetName, fileName, o
 	
 	elementsIndexesList = []
 
-	if setName != " ALL ELEMENTS":
+	if setName != " ALL ELEMENTS" and instanceName == "":
 		instanceKeyList = odb.rootAssembly.instances.keys()
 		tmpOffsetCounter = instanceKeyList.index(odb.rootAssembly.elementSets[setName].instanceNames[0])
 		for i in range(tmpOffsetCounter):
 			offset += len(odb.rootAssembly.nodeSets[" ALL NODES"].nodes[i])
 			elementOffset += len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i])
+	elif instanceName != "":
+		instanceKeyList = odb.rootAssembly.instances.keys()
+		tmpOffsetCounter = instanceKeyList.index(instanceName)
+		for i in range(tmpOffsetCounter):
+			offset += len(odb.rootAssembly.nodeSets[" ALL NODES"].nodes[i])
+			elementOffset += len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i])
 	
-	if setName != " ALL ELEMENTS":
+	if setName != " ALL ELEMENTS" and instanceName == "":
 		for i in range(len(odb.rootAssembly.elementSets[setName].elements[0])):
 			nodesListTmp.append(odb.rootAssembly.elementSets[setName].elements[0][i].connectivity[0] + offset - 1)
 			nodesListTmp.append(odb.rootAssembly.elementSets[setName].elements[0][i].connectivity[1] + offset - 1)
 			nodesListTmp.append(odb.rootAssembly.elementSets[setName].elements[0][i].connectivity[2] + offset - 1)
 			nodesListTmp.append(odb.rootAssembly.elementSets[setName].elements[0][i].connectivity[3] + offset - 1)
+	elif instanceName != "":
+		for i in range(len(odb.rootAssembly.instances[instanceName].elementSets[instanceSetName].elements)):
+			nodesListTmp.append(odb.rootAssembly.instances[instanceName].elementSets[instanceSetName].elements[i].connectivity[0] + offset - 1)
+			nodesListTmp.append(odb.rootAssembly.instances[instanceName].elementSets[instanceSetName].elements[i].connectivity[1] + offset - 1)
+			nodesListTmp.append(odb.rootAssembly.instances[instanceName].elementSets[instanceSetName].elements[i].connectivity[2] + offset - 1)
+			nodesListTmp.append(odb.rootAssembly.instances[instanceName].elementSets[instanceSetName].elements[i].connectivity[3] + offset - 1)
 	nodesList = removeRedundant(nodesListTmp)
 
-	for i in range(len(odb.rootAssembly.elementSets[setName].elements)):
+	if instanceName != "":
+		loopRange = 1#len(odb.rootAssembly.instances[instanceName].elementSets[instanceSetName].elements)
+	else:
+		loopRange = len(odb.rootAssembly.elementSets[setName].elements)
+
+	for i in range(loopRange):
 		if instanceName == "":
 			tmpExportValue = odb.rootAssembly.elementSets[setName].elements[i]
 			elementsCounter = len(odb.rootAssembly.elementSets[setName].elements[i])
@@ -271,7 +288,7 @@ def exportModel(step, frame, setName, instanceName, instanceSetName, fileName, o
 						myFile.write("NODAL")
 					print odb.steps[step].frames[frame].fieldOutputs[fieldOutputsKeys[fieldOutput]].componentLabels[componentLabel]+" EXPORTED"
 				myFile.close()
-			elif setName != "":
+			elif setName != "" or instanceName != "":
 				if elementValue:
 					for componentLabel in range(len(odb.steps[step].frames[frame].fieldOutputs[fieldOutputsKeys[fieldOutput]].componentLabels)):
 						print "EXPORTING "+odb.steps[step].frames[frame].fieldOutputs[fieldOutputsKeys[fieldOutput]].componentLabels[componentLabel]
@@ -314,7 +331,7 @@ def exportModel(step, frame, setName, instanceName, instanceSetName, fileName, o
 					myFile.write("NODAL")
 				print fieldOutputsKeys[fieldOutput]+" EXPORTED"
 				myFile.close()
-			elif setName != "":
+			elif setName != "" or instanceName != "":
 				if elementValue:
 					tmpExportValue = odb.steps[step].frames[frame].fieldOutputs[fieldOutputsKeys[fieldOutput]].values
 					for value in range(len(elementsIndexesList)):
@@ -349,7 +366,7 @@ def exportModel(step, frame, setName, instanceName, instanceSetName, fileName, o
 					myFile.write("ELEMENT")
 				else:
 					myFile.write("NODAL")
-			elif setName != "":
+			elif setName != "" or instanceName != "":
 				if elementValue:
 					tmpExportValue = odb.steps[step].frames[frame].fieldOutputs[fieldOutputsKeys[fieldOutput]].values
 					for value in range(len(elementsIndexesList)):
@@ -382,7 +399,7 @@ def exportModel(step, frame, setName, instanceName, instanceSetName, fileName, o
 					myFile.write("ELEMENT")
 				else:
 					myFile.write("NODAL")
-			elif setName != "":
+			elif setName != "" or instanceName != "":
 				if elementValue:
 					tmpExportValue = odb.steps[step].frames[frame].fieldOutputs[fieldOutputsKeys[fieldOutput]].values
 					for value in range(len(elementsIndexesList)):
@@ -415,7 +432,7 @@ def exportModel(step, frame, setName, instanceName, instanceSetName, fileName, o
 					myFile.write("ELEMENT")
 				else:
 					myFile.write("NODAL")
-			elif setName != "":
+			elif setName != "" or instanceName != "":
 				if elementValue:
 					tmpExportValue = odb.steps[step].frames[frame].fieldOutputs[fieldOutputsKeys[fieldOutput]].values
 					for value in range(len(elementsIndexesList)):
@@ -448,7 +465,7 @@ def exportModel(step, frame, setName, instanceName, instanceSetName, fileName, o
 					myFile.write("ELEMENT")
 				else:
 					myFile.write("NODAL")
-			elif setName != "":
+			elif setName != "" or instanceName != "":
 				if elementValue:
 					tmpExportValue = odb.steps[step].frames[frame].fieldOutputs[fieldOutputsKeys[fieldOutput]].values
 					for value in range(len(elementsIndexesList)):
@@ -481,7 +498,7 @@ def exportModel(step, frame, setName, instanceName, instanceSetName, fileName, o
 					myFile.write("ELEMENT")
 				else:
 					myFile.write("NODAL")
-			elif setName != "":
+			elif setName != "" or instanceName != "":
 				if elementValue:
 					tmpExportValue = odb.steps[step].frames[frame].fieldOutputs[fieldOutputsKeys[fieldOutput]].values
 					for value in range(len(elementsIndexesList)):
@@ -514,7 +531,7 @@ def exportModel(step, frame, setName, instanceName, instanceSetName, fileName, o
 					myFile.write("ELEMENT")
 				else:
 					myFile.write("NODAL")
-			elif setName != "":
+			elif setName != "" or instanceName != "":
 				if elementValue:
 					tmpExportValue = odb.steps[step].frames[frame].fieldOutputs[fieldOutputsKeys[fieldOutput]].values
 					for value in range(len(elementsIndexesList)):
@@ -547,7 +564,7 @@ def exportModel(step, frame, setName, instanceName, instanceSetName, fileName, o
 					myFile.write("ELEMENT")
 				else:
 					myFile.write("NODAL")
-			elif setName != "":
+			elif setName != "" or instanceName != "":
 				if elementValue:
 					tmpExportValue = odb.steps[step].frames[frame].fieldOutputs[fieldOutputsKeys[fieldOutput]].values
 					for value in range(len(elementsIndexesList)):
@@ -580,7 +597,7 @@ def exportModel(step, frame, setName, instanceName, instanceSetName, fileName, o
 					myFile.write("ELEMENT")
 				else:
 					myFile.write("NODAL")
-			elif setName != "":
+			elif setName != "" or instanceName != "":
 				if elementValue:
 					tmpExportValue = odb.steps[step].frames[frame].fieldOutputs[fieldOutputsKeys[fieldOutput]].values
 					for value in range(len(elementsIndexesList)):
@@ -613,7 +630,7 @@ def exportModel(step, frame, setName, instanceName, instanceSetName, fileName, o
 					myFile.write("ELEMENT")
 				else:
 					myFile.write("NODAL")
-			elif setName != "":
+			elif setName != "" or instanceName != "":
 				if elementValue:
 					tmpExportValue = odb.steps[step].frames[frame].fieldOutputs[fieldOutputsKeys[fieldOutput]].values
 					for value in range(len(elementsIndexesList)):
@@ -646,7 +663,7 @@ def exportModel(step, frame, setName, instanceName, instanceSetName, fileName, o
 					myFile.write("ELEMENT")
 				else:
 					myFile.write("NODAL")
-			elif setName != "":
+			elif setName != "" or instanceName != "":
 				if elementValue:
 					tmpExportValue = odb.steps[step].frames[frame].fieldOutputs[fieldOutputsKeys[fieldOutput]].values
 					for value in range(len(elementsIndexesList)):
@@ -679,7 +696,7 @@ def exportModel(step, frame, setName, instanceName, instanceSetName, fileName, o
 					myFile.write("ELEMENT")
 				else:
 					myFile.write("NODAL")
-			elif setName != "":
+			elif setName != "" or instanceName != "":
 				if elementValue:
 					tmpExportValue = odb.steps[step].frames[frame].fieldOutputs[fieldOutputsKeys[fieldOutput]].values
 					for value in range(len(elementsIndexesList)):
