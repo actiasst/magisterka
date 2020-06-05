@@ -1060,7 +1060,24 @@ def exportModel(step, frame, setName, instanceName, instanceSetName, fileName, o
 									flag = False
 									break
 						if flag:
-							elementsIndexesList.append(j+elementOffset)
+							if threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 10:
+								elementIndexesListTmpCounter = 4
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							elif threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 20:
+								elementIndexesListTmpCounter = 8
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							elif not threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 6:
+								elementIndexesListTmpCounter = 3
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							elif not threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 8:
+								elementIndexesListTmpCounter = 4
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							else:
+								elementsIndexesList.append(j+elementOffset)
 							for k in range(len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity)):
 								nodesListTmp.append(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity[k] + offset - 1)
 								myFile.write(str(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity[k] + offset - 1) + ' ')
@@ -1084,7 +1101,24 @@ def exportModel(step, frame, setName, instanceName, instanceSetName, fileName, o
 									flag = False
 									break
 						if flag:
-							elementsIndexesList.append(j+elementOffset)
+							if threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 10:
+								elementIndexesListTmpCounter = 4
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							elif threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 20:
+								elementIndexesListTmpCounter = 8
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							elif not threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 6:
+								elementIndexesListTmpCounter = 3
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							elif not threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 8:
+								elementIndexesListTmpCounter = 4
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							else:
+								elementsIndexesList.append(j+elementOffset)
 							for k in range(len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity)):
 								nodesListTmp.append(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity[k] + offset - 1)
 								myFile.write(str(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity[k] + offset - 1) + ' ')
@@ -1108,7 +1142,24 @@ def exportModel(step, frame, setName, instanceName, instanceSetName, fileName, o
 									flag = False
 									break
 						if flag:
-							elementsIndexesList.append(j+elementOffset)
+							if threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 10:
+								elementIndexesListTmpCounter = 4
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							elif threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 20:
+								elementIndexesListTmpCounter = 8
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							elif not threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 6:
+								elementIndexesListTmpCounter = 3
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							elif not threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 8:
+								elementIndexesListTmpCounter = 4
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							else:
+								elementsIndexesList.append(j+elementOffset)
 							for k in range(len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity)):
 								nodesListTmp.append(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity[k] + offset - 1)
 								myFile.write(str(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity[k] + offset - 1) + ' ')
@@ -1132,7 +1183,24 @@ def exportModel(step, frame, setName, instanceName, instanceSetName, fileName, o
 									flag = False
 									break
 						if flag:
-							elementsIndexesList.append(j+elementOffset)
+							if threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 10:
+								elementIndexesListTmpCounter = 4
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							elif threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 20:
+								elementIndexesListTmpCounter = 8
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							elif not threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 6:
+								elementIndexesListTmpCounter = 3
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							elif not threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 8:
+								elementIndexesListTmpCounter = 4
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							else:
+								elementsIndexesList.append(j+elementOffset)
 							for k in range(len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity)):
 								nodesListTmp.append(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity[k] + offset - 1)
 								myFile.write(str(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity[k] + offset - 1) + ' ')
@@ -1156,7 +1224,24 @@ def exportModel(step, frame, setName, instanceName, instanceSetName, fileName, o
 									flag = False
 									break
 						if flag:
-							elementsIndexesList.append(j+elementOffset)
+							if threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 10:
+								elementIndexesListTmpCounter = 4
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							elif threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 20:
+								elementIndexesListTmpCounter = 8
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							elif not threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 6:
+								elementIndexesListTmpCounter = 3
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							elif not threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 8:
+								elementIndexesListTmpCounter = 4
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							else:
+								elementsIndexesList.append(j+elementOffset)
 							for k in range(len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity)):
 								nodesListTmp.append(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity[k] + offset - 1)
 								myFile.write(str(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity[k] + offset - 1) + ' ')
@@ -1180,7 +1265,24 @@ def exportModel(step, frame, setName, instanceName, instanceSetName, fileName, o
 									flag = False
 									break
 						if flag:
-							elementsIndexesList.append(j+elementOffset)
+							if threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 10:
+								elementIndexesListTmpCounter = 4
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							elif threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 20:
+								elementIndexesListTmpCounter = 8
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							elif not threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 6:
+								elementIndexesListTmpCounter = 3
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							elif not threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 8:
+								elementIndexesListTmpCounter = 4
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							else:
+								elementsIndexesList.append(j+elementOffset)
 							for k in range(len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity)):
 								nodesListTmp.append(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity[k] + offset - 1)
 								myFile.write(str(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity[k] + offset - 1) + ' ')
@@ -1204,7 +1306,24 @@ def exportModel(step, frame, setName, instanceName, instanceSetName, fileName, o
 									flag = False
 									break
 						if flag:
-							elementsIndexesList.append(j+elementOffset)
+							if threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 10:
+								elementIndexesListTmpCounter = 4
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							elif threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 20:
+								elementIndexesListTmpCounter = 8
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							elif not threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 6:
+								elementIndexesListTmpCounter = 3
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							elif not threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 8:
+								elementIndexesListTmpCounter = 4
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							else:
+								elementsIndexesList.append(j+elementOffset)
 							for k in range(len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity)):
 								nodesListTmp.append(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity[k] + offset - 1)
 								myFile.write(str(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity[k] + offset - 1) + ' ')
@@ -1228,7 +1347,24 @@ def exportModel(step, frame, setName, instanceName, instanceSetName, fileName, o
 									flag = False
 									break
 						if flag:
-							elementsIndexesList.append(j+elementOffset)
+							if threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 10:
+								elementIndexesListTmpCounter = 4
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							elif threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 20:
+								elementIndexesListTmpCounter = 8
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							elif not threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 6:
+								elementIndexesListTmpCounter = 3
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							elif not threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 8:
+								elementIndexesListTmpCounter = 4
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							else:
+								elementsIndexesList.append(j+elementOffset)
 							for k in range(len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity)):
 								nodesListTmp.append(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity[k] + offset - 1)
 								myFile.write(str(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity[k] + offset - 1) + ' ')
@@ -1252,7 +1388,24 @@ def exportModel(step, frame, setName, instanceName, instanceSetName, fileName, o
 									flag = False
 									break
 						if flag:
-							elementsIndexesList.append(j+elementOffset)
+							if threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 10:
+								elementIndexesListTmpCounter = 4
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							elif threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 20:
+								elementIndexesListTmpCounter = 8
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							elif not threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 6:
+								elementIndexesListTmpCounter = 3
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							elif not threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 8:
+								elementIndexesListTmpCounter = 4
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							else:
+								elementsIndexesList.append(j+elementOffset)
 							for k in range(len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity)):
 								nodesListTmp.append(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity[k] + offset - 1)
 								myFile.write(str(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity[k] + offset - 1) + ' ')
@@ -1276,7 +1429,24 @@ def exportModel(step, frame, setName, instanceName, instanceSetName, fileName, o
 									flag = False
 									break
 						if flag:
-							elementsIndexesList.append(j+elementOffset)
+							if threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 10:
+								elementIndexesListTmpCounter = 4
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							elif threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 20:
+								elementIndexesListTmpCounter = 8
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							elif not threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 6:
+								elementIndexesListTmpCounter = 3
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							elif not threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 8:
+								elementIndexesListTmpCounter = 4
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							else:
+								elementsIndexesList.append(j+elementOffset)
 							for k in range(len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity)):
 								nodesListTmp.append(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity[k] + offset - 1)
 								myFile.write(str(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity[k] + offset - 1) + ' ')
@@ -1300,7 +1470,24 @@ def exportModel(step, frame, setName, instanceName, instanceSetName, fileName, o
 									flag = False
 									break
 						if flag:
-							elementsIndexesList.append(j+elementOffset)
+							if threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 10:
+								elementIndexesListTmpCounter = 4
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							elif threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 20:
+								elementIndexesListTmpCounter = 8
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							elif not threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 6:
+								elementIndexesListTmpCounter = 3
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							elif not threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 8:
+								elementIndexesListTmpCounter = 4
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							else:
+								elementsIndexesList.append(j+elementOffset)
 							for k in range(len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity)):
 								nodesListTmp.append(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity[k] + offset - 1)
 								myFile.write(str(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity[k] + offset - 1) + ' ')
@@ -1325,7 +1512,24 @@ def exportModel(step, frame, setName, instanceName, instanceSetName, fileName, o
 									flag = False
 									break
 						if flag:
-							elementsIndexesList.append(j+elementOffset)
+							if threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 10:
+								elementIndexesListTmpCounter = 4
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							elif threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 20:
+								elementIndexesListTmpCounter = 8
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							elif not threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 6:
+								elementIndexesListTmpCounter = 3
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							elif not threeDimension and len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity) == 8:
+								elementIndexesListTmpCounter = 4
+								for k in range(elementIndexesListTmpCounter):
+									elementsIndexesList.append((j + elementOffset - 1)*elementIndexesListTmpCounter + k)
+							else:
+								elementsIndexesList.append(j+elementOffset)
 							for k in range(len(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity)):
 								nodesListTmp.append(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity[k] + offset - 1)
 								myFile.write(str(odb.rootAssembly.elementSets[" ALL ELEMENTS"].elements[i][j].connectivity[k] + offset - 1) + ' ')
